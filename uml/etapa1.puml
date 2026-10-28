@@ -1,0 +1,38 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam shadowing false
+skinparam class {
+  BackgroundColor White
+  BorderColor #1f2a5c
+  HeaderBackgroundColor #1f2a5c
+  FontColor #1f2a5c
+}
+skinparam ArrowColor #0b5c80
+skinparam NoteBackgroundColor #fdf3e1
+skinparam NoteBorderColor #fdf3e1
+
+title Etapa 1 - Diagrama de classes
+
+class Main {
+  + main(args: String[]): void
+}
+
+class Menu {
+  - scanner: Scanner
+  - emExecucao: boolean
+  --
+  + executar(): void
+  - exibirOpcoes(): void
+  - lerOpcao(): int
+  - processarOpcao(opcao: int): void
+  - exibirSobre(): void
+}
+
+Main ..> Menu : cria e usa
+
+note bottom of Menu
+  Dependência, não associação permanente:
+  Main cria um Menu e delega a execução a ele.
+end note
+@enduml

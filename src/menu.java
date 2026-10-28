@@ -6,6 +6,8 @@ public class Menu {
 
     private final Scanner scanner;
     private boolean emExecucao;
+    private Jogador jogador;
+    private Cidade cidade;
 
     public Menu() {
         this.scanner = new Scanner(System.in);
@@ -29,13 +31,12 @@ public class Menu {
         System.out.println("==========================================");
         System.out.println("1 - Novo jogo");
         System.out.println("2 - Sobre o jogo");
+        System.out.println("3 - Ver status da cidade");
         System.out.println("0 - Sair");
         System.out.print("Escolha uma opcao: ");
     }
 
-    // Le uma linha e converte para inteiro. Se for invalida, devolve -1.
     private int lerOpcao() {
-        // Se a entrada acabou (Ctrl+D / fim do arquivo), encerra o menu sem travar.
         if (!scanner.hasNextLine()) {
             return 0;
         }
@@ -47,25 +48,57 @@ public class Menu {
         }
     }
 
-    // Decide a acao conforme o numero lido.
     private void processarOpcao(int opcao) {
         switch (opcao) {
             case 1:
-                System.out.println("\nNovo jogo sera implementado na Etapa 2.");
+                iniciarNovoJogo();
                 break;
             case 2:
                 exibirSobre();
+                break;
+            case 3:
+                exibirStatusCidade();
                 break;
             case 0:
                 System.out.println("\nAte logo!");
                 emExecucao = false;
                 break;
             default:
-                System.out.println("\nOpcao invalida! Digite 1, 2 ou 0.");
+                System.out.println("\nOpcao invalida! Digite 1, 2, 3 ou 0.");
         }
     }
 
-    // So e chamada quando processarOpcao recebe a opcao 2.
+    private void iniciarNovoJogo() {
+        if (cidade != null) {
+            System.out.println("\nAtencao: o jogo anterior sera substituido.");
+        }
+
+        System.out.println();
+        String nomeJogador = lerTexto("Digite o nome do jogador: ");
+        if (nomeJogador == null) {
+            return;
+        }
+        String nomeCidade = lerTexto("Digite o nome da cidade: ");
+        if (nomeCidade == null) {
+            return;
+        }
+
+        jogador = new Jogador(nomeJogador);
+        cidade = new Cidade(nomeCidade, jogador);
+
+        System.out.println();
+        System.out.println("Novo jogo criado! " + jogador.getTitulo() + " "
+                + jogador.getNome() + ", bem-vindo a " + nomeCidade + ".");
+    }
+
+    private void exibirStatusCidade() {
+        if (cidade == null) {
+            System.out.println("\nNenhum jogo iniciado. Escolha 'Novo jogo' primeiro.");
+        } else {
+            cidade.exibirStatus();
+        }
+    }
+
     private void exibirSobre() {
         System.out.println();
         System.out.println("------------------------------------------");
@@ -77,5 +110,20 @@ public class Menu {
         System.out.println("as cidades de Bolonha e Milano, comprando e");
         System.out.println("vendendo mercadorias para enriquecer.");
         System.out.println("------------------------------------------");
+    }
+
+    private String lerTexto(String pergunta) {
+        while (true) {
+            System.out.print(pergunta);
+            if (!scanner.hasNextLine()) {
+                emExecucao = false;
+                return null;
+            }
+            String texto = scanner.nextLine().trim();
+            if (!texto.isEmpty()) {
+                return texto;
+            }
+            System.out.println("O nome nao pode ficar vazio.");
+        }
     }
 }

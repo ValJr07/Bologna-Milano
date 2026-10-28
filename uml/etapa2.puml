@@ -1,0 +1,65 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam shadowing false
+skinparam class {
+  BackgroundColor White
+  BorderColor #1f2a5c
+  HeaderBackgroundColor #1f2a5c
+  FontColor #1f2a5c
+}
+skinparam ArrowColor #0b5c80
+skinparam NoteBackgroundColor #fdf3e1
+skinparam NoteBorderColor #fdf3e1
+
+title Etapa 2 - Diagrama de classes
+
+class Main {
+  + main(args: String[]): void
+}
+
+class Menu {
+  - scanner: Scanner
+  - emExecucao: boolean
+  - jogador: Jogador
+  - cidade: Cidade
+  --
+  + executar(): void
+  - exibirOpcoes(): void
+  - lerOpcao(): int
+  - processarOpcao(opcao: int): void
+  - iniciarNovoJogo(): void
+  - exibirStatusCidade(): void
+  - exibirSobre(): void
+  - lerTexto(pergunta: String): String
+}
+
+class Cidade {
+  - nome: String
+  - dono: Jogador
+  - anoAtual: int
+  --
+  + Cidade(nome, dono)
+  + avancarAno(): void
+  + exibirStatus(): void
+}
+
+class Jogador {
+  - nome: String
+  - titulo: String
+  --
+  + Jogador(nome)
+  + getNome(): String
+  + getTitulo(): String
+}
+
+Main ..> Menu : cria e usa
+Menu --> "0..1" Cidade : cidade
+Menu --> "0..1" Jogador : jogador
+Cidade --> "1" Jogador : dono
+
+note bottom of Menu
+  Menu guarda Jogador e Cidade (nulos até o "Novo jogo").
+  Cidade guarda o seu dono. Main só depende de Menu.
+end note
+@enduml
