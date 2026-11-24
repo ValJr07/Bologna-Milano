@@ -14,43 +14,42 @@ skinparam NoteBorderColor #fdf3e1
 
 title Etapa 2 - Diagrama de classes
 
-class Main {
-  + main(args: String[]): void
+class Main <<módulo>> {
+  + main(): None
 }
 
 class Menu {
-  - scanner: Scanner
-  - emExecucao: boolean
-  - jogador: Jogador
-  - cidade: Cidade
+  - _em_execucao: bool
+  - _jogador: Jogador | None
+  - _cidade: Cidade | None
   --
-  + executar(): void
-  - exibirOpcoes(): void
-  - lerOpcao(): int
-  - processarOpcao(opcao: int): void
-  - iniciarNovoJogo(): void
-  - exibirStatusCidade(): void
-  - exibirSobre(): void
-  - lerTexto(pergunta: String): String
+  + executar(): None
+  - _exibir_opcoes(): None
+  - _ler_opcao(): int
+  - _processar_opcao(opcao: int): None
+  - _iniciar_novo_jogo(): None
+  - _exibir_status_cidade(): None
+  - _exibir_sobre(): None
+  - _ler_texto(pergunta: str): str | None
 }
 
 class Cidade {
-  - nome: String
-  - dono: Jogador
-  - anoAtual: int
+  - _nome: str
+  - _dono: Jogador
+  - _ano_atual: int
   --
-  + Cidade(nome, dono)
-  + avancarAno(): void
-  + exibirStatus(): void
+  + Cidade(nome: str, dono: Jogador)
+  + avancar_ano(): None
+  + exibir_status(): None
 }
 
 class Jogador {
-  - nome: String
-  - titulo: String
+  - _nome: str
+  - _titulo: str
   --
-  + Jogador(nome)
-  + getNome(): String
-  + getTitulo(): String
+  + Jogador(nome: str)
+  + nome: str «somente leitura»
+  + titulo: str «somente leitura»
 }
 
 Main ..> Menu : cria e usa
@@ -59,7 +58,7 @@ Menu --> "0..1" Jogador : jogador
 Cidade --> "1" Jogador : dono
 
 note bottom of Menu
-  Menu guarda Jogador e Cidade (nulos até o "Novo jogo").
+  Menu guarda Jogador e Cidade (None até o "Novo jogo").
   Cidade guarda o seu dono. Main só depende de Menu.
 end note
 @enduml

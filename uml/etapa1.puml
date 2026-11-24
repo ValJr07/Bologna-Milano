@@ -14,25 +14,24 @@ skinparam NoteBorderColor #fdf3e1
 
 title Etapa 1 - Diagrama de classes
 
-class Main {
-  + main(args: String[]): void
+class Main <<módulo>> {
+  + main(): None
 }
 
 class Menu {
-  - scanner: Scanner
-  - emExecucao: boolean
+  - _em_execucao: bool
   --
-  + executar(): void
-  - exibirOpcoes(): void
-  - lerOpcao(): int
-  - processarOpcao(opcao: int): void
-  - exibirSobre(): void
+  + executar(): None
+  - _exibir_opcoes(): None
+  - _ler_opcao(): int
+  - _processar_opcao(opcao: int): None
+  - _exibir_sobre(): None
 }
 
 Main ..> Menu : cria e usa
 
 note bottom of Menu
   Dependência, não associação permanente:
-  Main cria um Menu e delega a execução a ele.
+  main() cria um Menu e delega a execução a ele.
 end note
 @enduml
