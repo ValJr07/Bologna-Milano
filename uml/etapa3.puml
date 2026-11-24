@@ -1,0 +1,98 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam shadowing false
+skinparam class {
+  BackgroundColor White
+  BorderColor #1f2a5c
+  HeaderBackgroundColor #1f2a5c
+  FontColor #1f2a5c
+}
+skinparam ArrowColor #0b5c80
+skinparam NoteBackgroundColor #fdf3e1
+skinparam NoteBorderColor #fdf3e1
+
+title Etapa 3 - Diagrama de classes
+
+class Main <<módulo>> {
+  + main(): None
+}
+
+class Menu {
+  - _em_execucao: bool
+  - _jogador: Jogador | None
+  - _cidade: Cidade | None
+  - _mercado: Mercado
+  --
+  + executar(): None
+  - _exibir_opcoes(): None
+  - _ler_opcao(): int
+  - _processar_opcao(opcao: int): None
+  - _iniciar_novo_jogo(): None
+  - _exibir_status(): None
+  - _abrir_mercado(): None
+  - _exibir_opcoes_mercado(cidade: Cidade): None
+  - _ler_quantidade(): int | None
+  - _comprar_graos(cidade: Cidade): None
+  - _vender_graos(cidade: Cidade): None
+  - _comprar_terras(cidade: Cidade): None
+  - _vender_terras(cidade: Cidade): None
+  - _exibir_sobre(): None
+  - _ler_texto(pergunta: str): str | None
+}
+
+class Jogador {
+  - _nome: str
+  - _titulo: str
+  --
+  + Jogador(nome: str)
+  + nome: str «somente leitura»
+  + titulo: str «somente leitura»
+}
+
+class Cidade {
+  - _nome: str
+  - _dono: Jogador
+  - _ano_atual: int
+  - _florins: int
+  - _terras: int
+  - _graos: int
+  --
+  + Cidade(nome: str, dono: Jogador)
+  + nome, dono, ano_atual: «somente leitura»
+  + florins, terras, graos: int «somente leitura»
+  + avancar_ano(): None
+  + adicionar_florins(qtd: int): None
+  + remover_florins(qtd: int): bool
+  + adicionar_terras(qtd: int): None
+  + remover_terras(qtd: int): bool
+  + adicionar_graos(qtd: int): None
+  + remover_graos(qtd: int): bool
+  + exibir_status(): None
+}
+
+class Mercado {
+  - _PRECO_GRAO: int
+  - _PRECO_TERRA: int
+  --
+  + preco_grao: int «somente leitura»
+  + preco_terra: int «somente leitura»
+  + comprar_graos(cidade: Cidade, quantidade: int): bool
+  + vender_graos(cidade: Cidade, quantidade: int): bool
+  + comprar_terras(cidade: Cidade, quantidade: int): bool
+  + vender_terras(cidade: Cidade, quantidade: int): bool
+}
+
+Main ..> Menu : cria e usa
+Menu --> "0..1" Jogador : jogador
+Menu --> "0..1" Cidade : cidade
+Menu --> "1" Mercado : mercado
+Cidade --> "1" Jogador : dono
+Mercado ..> Cidade : usa
+
+note bottom of Mercado
+  Dependência, não associação permanente:
+  Mercado só recebe a Cidade como parâmetro,
+  sem guardar referência.
+end note
+@enduml
