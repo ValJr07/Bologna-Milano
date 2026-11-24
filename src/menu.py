@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from agricultura import Agricultura
 from cidade import Cidade
+from governo import Governo
 from jogador import Jogador
 from mercado import Mercado
 
@@ -14,6 +15,7 @@ class Menu:
         self._cidade: Cidade | None = None
         self._mercado = Mercado()
         self._agricultura = Agricultura()
+        self._governo = Governo()
 
     def executar(self) -> None:
         while self._em_execucao:
@@ -31,7 +33,8 @@ class Menu:
         print("2 - Ver status da cidade")
         print("3 - Mercado")
         print("4 - Agricultura")
-        print("5 - Sobre o jogo")
+        print("5 - Governo")
+        print("6 - Sobre o jogo")
         print("0 - Sair")
         print("Escolha uma opcao: ", end="", flush=True)
 
@@ -55,12 +58,14 @@ class Menu:
         elif opcao == 4:
             self._abrir_agricultura()
         elif opcao == 5:
+            self._abrir_governo()
+        elif opcao == 6:
             self._exibir_sobre()
         elif opcao == 0:
             print("\nAte logo!")
             self._em_execucao = False
         else:
-            print("\nOpcao invalida! Digite 1, 2, 3, 4, 5 ou 0.")
+            print("\nOpcao invalida! Digite 1, 2, 3, 4, 5, 6 ou 0.")
 
     def _iniciar_novo_jogo(self) -> None:
         if self._cidade is not None:
@@ -262,6 +267,78 @@ class Menu:
                   f"{servos_antes} para {cidade.servos} servos.")
         else:
             print(f"A populacao se manteve em {cidade.servos} servos.")
+
+    def _abrir_governo(self) -> None:
+        cidade = self._cidade
+        if cidade is None:
+            print("\nNenhum jogo iniciado. Escolha 'Novo jogo' primeiro.")
+            return
+
+        no_governo = True
+        while no_governo and self._em_execucao:
+            self._exibir_opcoes_governo(cidade)
+            opcao = self._ler_opcao()
+            if opcao == 1:
+                self._arrecadar_impostos(cidade)
+            elif opcao == 2:
+                self._definir_taxa_imposto(cidade)
+            elif opcao == 3:
+                self._definir_justica(cidade)
+            elif opcao == 0:
+                no_governo = False
+            else:
+                print("\nOpcao invalida! Digite 1, 2, 3 ou 0.")
+
+    def _exibir_opcoes_governo(self, cidade: Cidade) -> None:
+        print()
+        print("------------------------------------------")
+        print("GOVERNO")
+        print("------------------------------------------")
+        print(f"Seus florins:      {cidade.florins}")
+        print(f"Seus servos:       {cidade.servos}")
+        print(f"Taxa de imposto:   {cidade.taxa_imposto}%")
+        print(f"Nivel de justica:  {cidade.nivel_justica}")
+        print("------------------------------------------")
+        print("1 - Arrecadar impostos")
+        print("2 - Definir taxa de imposto")
+        print("3 - Definir nivel de justica")
+        print("0 - Voltar")
+        print("Escolha uma opcao: ", end="", flush=True)
+
+    def _arrecadar_impostos(self, cidade: Cidade) -> None:
+        florins_antes = cidade.florins
+        arrecadado = self._governo.arrecadar_impostos(cidade)
+        print()
+        print(f"Impostos arrecadados: {arrecadado} florins.")
+        print(f"Florins: {florins_antes} -> {cidade.florins}")
+
+    def _definir_taxa_imposto(self, cidade: Cidade) -> None:
+        maxima = self._governo.taxa_maxima
+        taxa = self._ler_inteiro(f"Nova taxa de imposto (0 a {maxima}): ")
+        if taxa is None:
+            return
+        if self._governo.definir_taxa_imposto(cidade, taxa):
+            print(f"\nTaxa de imposto definida: {taxa}%.")
+        else:
+            print(f"\nTaxa invalida. Digite um valor de 0 a {maxima}.")
+
+    def _definir_justica(self, cidade: Cidade) -> None:
+        niveis = self._governo.niveis_justica
+        print()
+        print(f"Nivel de justica atual: {cidade.nivel_justica}")
+        for numero, nivel in enumerate(niveis, start=1):
+            print(f"{numero} - {nivel}")
+        escolha = self._ler_inteiro("Escolha o nivel: ")
+        if escolha is None:
+            return
+        if not 1 <= escolha <= len(niveis):
+            print("\nOpcao invalida. O nivel de justica nao foi alterado.")
+            return
+        nivel = niveis[escolha - 1]
+        if self._governo.definir_justica(cidade, nivel):
+            print(f"\nNivel de justica definido: {nivel}.")
+        else:
+            print("\nNivel de justica invalido.")
 
     def _exibir_sobre(self) -> None:
         print()

@@ -11,6 +11,8 @@ class Cidade:
         self._terras = 10000
         self._graos = 500
         self._servos = 200
+        self._taxa_imposto = 10
+        self._nivel_justica = "Moderada"
 
     @property
     def nome(self) -> str:
@@ -39,6 +41,24 @@ class Cidade:
     @property
     def servos(self) -> int:
         return self._servos
+
+    # Taxa de imposto e nivel de justica sao configuracoes, nao recursos
+    # acumulaveis: getter/setter simples (a validacao fica no Governo).
+    @property
+    def taxa_imposto(self) -> int:
+        return self._taxa_imposto
+
+    @taxa_imposto.setter
+    def taxa_imposto(self, taxa: int) -> None:
+        self._taxa_imposto = taxa
+
+    @property
+    def nivel_justica(self) -> str:
+        return self._nivel_justica
+
+    @nivel_justica.setter
+    def nivel_justica(self, nivel: str) -> None:
+        self._nivel_justica = nivel
 
     # Sera chamado apenas a partir da Etapa 7.
     def avancar_ano(self) -> None:
@@ -95,4 +115,6 @@ class Cidade:
         print(f"Terras:     {self._terras} hectares")
         print(f"Graos:      {self._graos} unidades")
         print(f"Servos:     {self._servos}")
+        print(f"Imposto:    {self._taxa_imposto}%")
+        print(f"Justica:    {self._nivel_justica}")
         print("------------------------------------------")
