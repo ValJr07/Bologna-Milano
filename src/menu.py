@@ -47,14 +47,8 @@ class Menu:
         print("Escolha uma opcao: ", end="", flush=True)
 
     def _ler_opcao(self) -> int:
-        try:
-            linha = input().strip()
-        except EOFError:
-            return 0
-        try:
-            return int(linha)
-        except ValueError:
-            return -1
+        valor = self._ler_inteiro()
+        return 0 if valor is None else valor
 
     def _processar_opcao(self, opcao: int) -> None:
         if opcao == 1:
@@ -118,17 +112,20 @@ class Menu:
         print(f"Agora e a vez de {cidade.dono.titulo} {cidade.dono.nome}, "
               f"governante de {cidade.nome} (ano {cidade.ano_atual}).")
 
-    def _exibir_status(self) -> None:
-        if self._cidade is None:
+    def _exigir_jogo_em_andamento(self) -> bool:
+        if self._partida is None or self._cidade is None:
             print("\nNenhum jogo iniciado. Escolha 'Novo jogo' primeiro.")
-        else:
+            return False
+        return True
+
+    def _exibir_status(self) -> None:
+        if self._exigir_jogo_em_andamento():
             self._cidade.exibir_status()
 
     def _abrir_mercado(self) -> None:
-        cidade = self._cidade
-        if cidade is None:
-            print("\nNenhum jogo iniciado. Escolha 'Novo jogo' primeiro.")
+        if not self._exigir_jogo_em_andamento():
             return
+        cidade = self._cidade
 
         no_mercado = True
         while no_mercado and self._em_execucao:
@@ -168,7 +165,8 @@ class Menu:
     def _ler_quantidade(self) -> int | None:
         return self._ler_inteiro("Quantidade: ")
 
-    def _ler_inteiro(self, pergunta: str) -> int | None:
+    def _ler_inteiro(self, pergunta: str = "") -> int | None:
+        """Le uma linha e converte para int: -1 se nao for numero, None no EOF."""
         print(pergunta, end="", flush=True)
         try:
             linha = input().strip()
@@ -229,10 +227,9 @@ class Menu:
             print("\nTerras insuficientes.")
 
     def _abrir_agricultura(self) -> None:
-        cidade = self._cidade
-        if cidade is None:
-            print("\nNenhum jogo iniciado. Escolha 'Novo jogo' primeiro.")
+        if not self._exigir_jogo_em_andamento():
             return
+        cidade = self._cidade
 
         na_agricultura = True
         while na_agricultura and self._em_execucao:
@@ -304,10 +301,9 @@ class Menu:
             print(f"A populacao se manteve em {cidade.servos} servos.")
 
     def _abrir_governo(self) -> None:
-        cidade = self._cidade
-        if cidade is None:
-            print("\nNenhum jogo iniciado. Escolha 'Novo jogo' primeiro.")
+        if not self._exigir_jogo_em_andamento():
             return
+        cidade = self._cidade
 
         no_governo = True
         while no_governo and self._em_execucao:
@@ -379,10 +375,9 @@ class Menu:
             print("\nNivel de justica invalido.")
 
     def _abrir_construcoes(self) -> None:
-        cidade = self._cidade
-        if cidade is None:
-            print("\nNenhum jogo iniciado. Escolha 'Novo jogo' primeiro.")
+        if not self._exigir_jogo_em_andamento():
             return
+        cidade = self._cidade
 
         na_construcoes = True
         while na_construcoes and self._em_execucao:
@@ -441,10 +436,9 @@ class Menu:
             print("\nFlorins insuficientes.")
 
     def _encerrar_turno(self) -> None:
-        partida = self._partida
-        if partida is None:
-            print("\nNenhum jogo iniciado. Escolha 'Novo jogo' primeiro.")
+        if not self._exigir_jogo_em_andamento():
             return
+        partida = self._partida
 
         print()
         if not partida.passar_turno():
@@ -467,10 +461,9 @@ class Menu:
             self._anunciar_vez()
 
     def _exibir_classificacao(self) -> None:
-        partida = self._partida
-        if partida is None:
-            print("\nNenhum jogo iniciado. Escolha 'Novo jogo' primeiro.")
+        if not self._exigir_jogo_em_andamento():
             return
+        partida = self._partida
 
         print()
         print("------------------------------------------")

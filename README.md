@@ -2,14 +2,47 @@
 
 Jogo de estratégia econômica medieval em Python, jogado pelo console. O jogador comanda uma cidade da Itália medieval, começando no ano de 1400 com o título de Cavaleiro.
 
-> Projeto em desenvolvimento (SPOTDES). Por enquanto existem o menu, a criação do jogador e da cidade, o mercado de grãos e terras, a agricultura com a população e o governo com os impostos e as construções com soldados e edifícios, e a partida com rodadas, vários jogadores e vitória.
+> Projeto da disciplina SPOTDES (4º bimestre). Versão final: o jogo tem menu, mercado, agricultura, governo, construções, rodadas anuais, de 1 a 4 jogadores e vitória, com testes automatizados.
 
 ## Como executar
 
-Requer Python 3.8 ou superior. Na raiz do projeto:
+Requer Python 3.8 ou superior e nenhuma biblioteca externa. Na raiz do projeto:
 
 ```
 python src/main.py
+```
+
+## Como jogar (menu principal)
+
+| Opção | Ação |
+|-------|------|
+| 1 | Novo jogo (1 a 4 jogadores, cada um com nome e cidade) |
+| 2 | Ver status da cidade da vez |
+| 3 | Mercado: comprar/vender grãos e terras |
+| 4 | Agricultura: colher e distribuir alimentos |
+| 5 | Governo: arrecadar impostos, definir taxa e justiça |
+| 6 | Construções: recrutar soldados e construir |
+| 7 | Encerrar turno (passa a vez; o último jogador fecha o ano) |
+| 8 | Ver classificação |
+| 9 | Sobre o jogo |
+| 0 | Sair |
+
+## Testes
+
+Os testes automatizados ficam em `src/testes.py` (padrão preparar, executar, verificar, sem biblioteca externa). Na raiz do projeto:
+
+```
+python src/testes.py
+```
+
+A saída termina com `Aprovados: 37 | Reprovados: 0`. Se algum teste falhar, aparece `[FALHA]` com a regra quebrada e o programa termina com código 1.
+
+## Estrutura
+
+```
+src/            código do jogo (main, menu, cidade, jogador, partida, ...) e testes.py
+uml/            diagramas de classes (etapa1 a etapa8) e de sequência (etapa8-sequencia)
+casos-de-uso/   diagramas de casos de uso
 ```
 
 ## Economia
@@ -68,3 +101,4 @@ Uma partida tem de **1 a 4 jogadores** (cada um com a sua cidade). Cada jogador 
 - **Etapa 5**: impostos e governo. `Cidade` ganha taxa de imposto e nível de justiça; nova classe `Governo` (arrecadação, validação de taxa e justiça) e novo menu "Governo".
 - **Etapa 6**: construções e soldados. `Cidade` ganha soldados e construções; nova classe `Construcoes` (recrutar soldados validando florins e servos, construir) e novo menu "Construções" (opção 6; "Sobre o jogo" passa a ser a 7).
 - **Etapa 7**: rodadas, múltiplos jogadores e vitória. Novas classes `Partida` (turnos, anos, fim de jogo, vencedor) e `Nobreza` (prestígio e promoção); `Jogador` troca `titulo` por `nivel_titulo`; `Cidade` ganha os indicadores de colheita e impostos do ano; novos menus "Encerrar turno" e "Ver classificação".
+- **Etapa 8**: integração, testes e entrega final. Nenhuma regra nova: classe `Testes` (37 verificações), refatoração do Menu (`_ler_inteiro` e `_exigir_jogo_em_andamento`, sem mudar o comportamento), diagramas finais (classes, casos de uso e sequência) e README completo.

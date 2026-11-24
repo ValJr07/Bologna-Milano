@@ -1,0 +1,252 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam shadowing false
+skinparam class {
+  BackgroundColor White
+  BorderColor #1f2a5c
+  HeaderBackgroundColor #1f2a5c
+  FontColor #1f2a5c
+}
+skinparam ArrowColor #0b5c80
+skinparam NoteBackgroundColor #fdf3e1
+skinparam NoteBorderColor #fdf3e1
+
+title Etapa 8 - Diagrama de classes
+
+class Main <<módulo>> {
+  + main(): None
+}
+
+class Menu {
+  - _em_execucao: bool
+  - _partida: Partida | None
+  - _cidade: Cidade | None
+  - _mercado: Mercado
+  - _agricultura: Agricultura
+  - _governo: Governo
+  - _construcoes: Construcoes
+  - _nobreza: Nobreza
+  --
+  + executar(): None
+  - _exibir_opcoes(): None
+  - _ler_opcao(): int  // agora so chama _ler_inteiro
+  - _processar_opcao(opcao: int): None
+  - _iniciar_novo_jogo(): None  // 1 a 4 jogadores
+  - _anunciar_vez(): None
+  - _exibir_status(): None
+  - _abrir_mercado(): None
+  - _exibir_opcoes_mercado(cidade: Cidade): None
+  - _ler_quantidade(): int | None
+  - _comprar_graos(cidade: Cidade): None
+  - _vender_graos(cidade: Cidade): None
+  - _comprar_terras(cidade: Cidade): None
+  - _vender_terras(cidade: Cidade): None
+  - _abrir_agricultura(): None
+  - _exibir_opcoes_agricultura(cidade: Cidade): None
+  - _colher(cidade: Cidade): None
+  - _distribuir_alimentos(cidade: Cidade): None
+  - _abrir_governo(): None
+  - _exibir_opcoes_governo(cidade: Cidade): None
+  - _arrecadar_impostos(cidade: Cidade): None
+  - _definir_taxa_imposto(cidade: Cidade): None
+  - _definir_justica(cidade: Cidade): None
+  - _abrir_construcoes(): None
+  - _exibir_opcoes_construcoes(cidade: Cidade): None
+  - _recrutar_soldados(cidade: Cidade): None
+  - _construir(cidade: Cidade): None
+  - _encerrar_turno(): None
+  - _exibir_classificacao(): None
+  - _encerrar_partida(): None
+  - _ler_inteiro(pergunta: str = ""): int | None  // refatorado: unica conversao
+  - _exigir_jogo_em_andamento(): bool  // novo
+  - _exibir_sobre(): None
+  - _ler_texto(pergunta: str): str | None
+}
+
+class Jogador {
+  - _TITULOS: tuple {static}
+  - _nome: str
+  - _nivel_titulo: int
+  --
+  + Jogador(nome: str)
+  + nome: str «somente leitura»
+  + titulo: str «somente leitura»
+  + nivel_titulo: int «somente leitura»
+  + promover(): bool
+  + eh_monarca(): bool
+}
+
+class Cidade {
+  - _nome: str
+  - _dono: Jogador
+  - _ano_atual: int
+  - _florins: int
+  - _terras: int
+  - _graos: int
+  - _servos: int
+  - _taxa_imposto: int
+  - _nivel_justica: str
+  - _soldados: int
+  - _construcoes: int
+  - _colheita_feita: bool
+  - _impostos_arrecadados: bool
+  --
+  + Cidade(nome: str, dono: Jogador)
+  + nome, dono, ano_atual: «somente leitura»
+  + florins, terras, graos, servos: int «somente leitura»
+  + soldados, construcoes: int «somente leitura»
+  + taxa_imposto: int «leitura e escrita»
+  + nivel_justica: str «leitura e escrita»
+  + avancar_ano(): None
+  + colheita_feita(): bool
+  + marcar_colheita_feita(): None
+  + impostos_arrecadados(): bool
+  + marcar_impostos_arrecadados(): None
+  + adicionar_florins(qtd: int): None
+  + remover_florins(qtd: int): bool
+  + adicionar_terras(qtd: int): None
+  + remover_terras(qtd: int): bool
+  + adicionar_graos(qtd: int): None
+  + remover_graos(qtd: int): bool
+  + adicionar_servos(qtd: int): None
+  + remover_servos(qtd: int): bool
+  + adicionar_soldados(qtd: int): None
+  + remover_soldados(qtd: int): bool
+  + adicionar_construcoes(qtd: int): None
+  + remover_construcoes(qtd: int): bool
+  + exibir_status(): None
+}
+
+class Mercado {
+  - _PRECO_GRAO: int
+  - _PRECO_TERRA: int
+  --
+  + preco_grao: int «somente leitura»
+  + preco_terra: int «somente leitura»
+  + comprar_graos(cidade: Cidade, quantidade: int): bool
+  + vender_graos(cidade: Cidade, quantidade: int): bool
+  + comprar_terras(cidade: Cidade, quantidade: int): bool
+  + vender_terras(cidade: Cidade, quantidade: int): bool
+}
+
+class Agricultura {
+  - _HECTARES_POR_SERVO: int
+  - _HECTARES_POR_SEMENTE: int
+  - _RENDIMENTO_POR_HECTARE: int
+  - _SERVOS_POR_GRAO: int
+  - _CRESCIMENTO_PERCENTUAL: int
+  - _PERCENTUAL_MINIMO: int
+  - _PERCENTUAL_MAXIMO: int
+  --
+  + percentual_minimo: int «somente leitura»
+  + percentual_maximo: int «somente leitura»
+  + processar_colheita(cidade: Cidade): int  // -1 se ja colheu
+  + distribuir_alimentos(cidade: Cidade, percentual: int): bool
+}
+
+class Governo {
+  - _TAXA_MAXIMA: int
+  - _NIVEL_JUSTA: str
+  - _NIVEL_MODERADA: str
+  - _NIVEL_SEVERA: str
+  - _MULTIPLICADOR_JUSTA: float
+  - _MULTIPLICADOR_MODERADA: float
+  - _MULTIPLICADOR_SEVERA: float
+  --
+  + taxa_maxima: int «somente leitura»
+  + niveis_justica: tuple «somente leitura»
+  + arrecadar_impostos(cidade: Cidade): int  // -1 se ja arrecadou
+  + definir_taxa_imposto(cidade: Cidade, taxa: int): bool
+  + definir_justica(cidade: Cidade, nivel: str): bool
+  - _multiplicador_para(nivel: str): float
+}
+
+class Construcoes {
+  - _PRECO_SOLDADO: int
+  - _SERVOS_POR_SOLDADO: int
+  - _PRECO_CONSTRUCAO: int
+  --
+  + preco_soldado: int «somente leitura»
+  + preco_construcao: int «somente leitura»
+  + recrutar_soldados(cidade: Cidade, quantidade: int): bool
+  + construir(cidade: Cidade, quantidade: int): bool
+}
+
+class Partida {
+  + MAXIMO_JOGADORES: int = 4 {static}
+  + ANO_FINAL: int = 1410 {static}
+  - _cidades: list[Cidade]
+  - _indice_atual: int
+  --
+  + cidades: list[Cidade] «somente leitura»
+  + cidade_atual: Cidade «somente leitura»
+  + ano_atual: int «somente leitura»
+  + ano_final: int «somente leitura»
+  + adicionar_cidade(cidade: Cidade): bool
+  + passar_turno(): bool
+  + encerrar_ano(nobreza: Nobreza): list[Cidade]
+  + terminou(): bool
+  + determinar_vencedor(nobreza: Nobreza): Cidade
+}
+
+class Nobreza {
+  - _PESO_CONSTRUCAO: int = 10
+  - _PESO_SOLDADO: int = 2
+  - _PESO_SERVO: int = 1
+  - _HECTARES_POR_PONTO: int = 100
+  - _PRESTIGIO_MINIMO: tuple = (0, 400, 550, 700, 850, 1000)
+  --
+  + calcular_prestigio(cidade: Cidade): int
+  + prestigio_para_proximo_titulo(jogador: Jogador): int
+  + verificar_promocao(cidade: Cidade): bool
+}
+
+class Testes <<módulo>> {
+  - _aprovados: int {static}
+  - _reprovados: int {static}
+  --
+  + main(): None {static}
+  - _verificar(descricao: str, condicao: bool): None {static}
+  - _nova_cidade(): Cidade {static}
+  - _testar_cidade(): None {static}
+  - _testar_mercado(): None {static}
+  - _testar_agricultura(): None {static}
+  - _testar_governo(): None {static}
+  - _testar_construcoes(): None {static}
+  - _testar_jogador_e_nobreza(): None {static}
+  - _testar_partida(): None {static}
+}
+
+Main ..> Menu : cria e usa
+Menu --> "0..1" Partida : partida
+Menu --> "0..1" Cidade : cidade
+Menu --> "1" Mercado : mercado
+Menu --> "1" Agricultura : agricultura
+Menu --> "1" Governo : governo
+Menu --> "1" Construcoes : construcoes
+Menu --> "1" Nobreza : nobreza
+Partida --> "1..4" Cidade : cidades
+Cidade --> "1" Jogador : dono
+Mercado ..> Cidade : usa
+Agricultura ..> Cidade : usa
+Governo ..> Cidade : usa
+Construcoes ..> Cidade : usa
+Nobreza ..> Cidade : usa
+Testes ..> Cidade : testa
+Testes ..> Jogador : testa
+Testes ..> Mercado : testa
+Testes ..> Agricultura : testa
+Testes ..> Governo : testa
+Testes ..> Construcoes : testa
+Testes ..> Nobreza : testa
+Testes ..> Partida : testa
+Nobreza ..> Jogador : promove
+Partida ..> Nobreza : usa
+
+note bottom of Nobreza
+  Mercado, Agricultura, Governo, Construcoes e Nobreza: dependência, não associação.
+  Só recebem a Cidade como parâmetro,
+  sem guardar referência.
+end note
+@enduml

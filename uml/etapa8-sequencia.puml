@@ -1,0 +1,45 @@
+@startuml
+skinparam shadowing false
+skinparam sequence {
+  ParticipantBackgroundColor #1f2a5c
+  ParticipantFontColor White
+  ParticipantBorderColor #1f2a5c
+  ActorBackgroundColor White
+  ActorBorderColor #1f2a5c
+  LifeLineBorderColor #1f2a5c
+  ArrowColor #1f2a5c
+}
+skinparam NoteBackgroundColor #fdf3e1
+skinparam NoteBorderColor #fdf3e1
+
+title Etapa 8 - Diagrama de sequência: fim do ano
+
+actor Jogador
+participant ":Menu" as Menu
+participant ":Partida" as Partida
+participant ":Cidade" as Cidade
+participant ":Nobreza" as Nobreza
+participant "dono:Jogador" as Dono
+
+Jogador -> Menu : opção 7 (Encerrar turno)
+Menu -> Partida : passar_turno()
+Partida --> Menu : True (fim do ano)
+Menu -> Partida : encerrar_ano(nobreza)
+loop para cada cidade
+  Partida -> Cidade : avancar_ano()
+  Partida -> Nobreza : verificar_promocao(cidade)
+  alt prestígio suficiente
+    Nobreza -> Dono : promover()
+  end
+  Nobreza --> Partida : True / False
+end
+Partida --> Menu : lista de promovidas
+Menu -> Partida : terminou()
+Menu --> Jogador : "Agora é a vez de..." ou FIM DE JOGO
+
+note over Menu, Partida
+  Só o ÚLTIMO jogador da rodada percorre este fluxo.
+  Para os outros, passar_turno() devolve False e o Menu
+  apenas anuncia de quem é a vez.
+end note
+@enduml
