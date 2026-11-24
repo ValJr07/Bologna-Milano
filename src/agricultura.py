@@ -26,8 +26,11 @@ class Agricultura:
     def processar_colheita(self, cidade: Cidade) -> int:
         """Planta, gasta a semente e produz graos novos.
 
-        Devolve o numero de hectares cultivados.
+        Devolve o numero de hectares cultivados, ou -1 (sem alterar nada)
+        se a cidade ja colheu neste ano.
         """
+        if cidade.colheita_feita():
+            return -1
         hectares = min(cidade.terras, cidade.servos * self._HECTARES_POR_SERVO)
         sementes = hectares // self._HECTARES_POR_SEMENTE
         if sementes > cidade.graos:
@@ -37,6 +40,7 @@ class Agricultura:
         cidade.remover_graos(sementes)
         producao = hectares * self._RENDIMENTO_POR_HECTARE
         cidade.adicionar_graos(producao)
+        cidade.marcar_colheita_feita()
         return hectares
 
     def distribuir_alimentos(self, cidade: Cidade, percentual: int) -> bool:

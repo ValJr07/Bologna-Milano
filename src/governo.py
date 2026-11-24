@@ -26,11 +26,17 @@ class Governo:
         return (self._NIVEL_JUSTA, self._NIVEL_MODERADA, self._NIVEL_SEVERA)
 
     def arrecadar_impostos(self, cidade: Cidade) -> int:
-        """Credita os impostos aos florins da cidade e devolve o valor."""
+        """Credita os impostos aos florins da cidade e devolve o valor.
+
+        Devolve -1 (sem alterar nada) se ja arrecadou neste ano.
+        """
+        if cidade.impostos_arrecadados():
+            return -1
         base = cidade.servos * cidade.taxa_imposto // 100
         multiplicador = self._multiplicador_para(cidade.nivel_justica)
         arrecadado = int(base * multiplicador)
         cidade.adicionar_florins(arrecadado)
+        cidade.marcar_impostos_arrecadados()
         return arrecadado
 
     def definir_taxa_imposto(self, cidade: Cidade, taxa: int) -> bool:

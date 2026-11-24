@@ -15,6 +15,9 @@ class Cidade:
         self._nivel_justica = "Moderada"
         self._soldados = 0
         self._construcoes = 0
+        # Indicadores "ja fez neste ano?", zerados por avancar_ano().
+        self._colheita_feita = False
+        self._impostos_arrecadados = False
 
     @property
     def nome(self) -> str:
@@ -70,9 +73,22 @@ class Cidade:
     def nivel_justica(self, nivel: str) -> None:
         self._nivel_justica = nivel
 
-    # Sera chamado apenas a partir da Etapa 7.
     def avancar_ano(self) -> None:
         self._ano_atual += 1
+        self._colheita_feita = False
+        self._impostos_arrecadados = False
+
+    def colheita_feita(self) -> bool:
+        return self._colheita_feita
+
+    def marcar_colheita_feita(self) -> None:
+        self._colheita_feita = True
+
+    def impostos_arrecadados(self) -> bool:
+        return self._impostos_arrecadados
+
+    def marcar_impostos_arrecadados(self) -> None:
+        self._impostos_arrecadados = True
 
     # Para cada recurso: adicionar sempre funciona; remover devolve False
     # (sem alterar nada) se nao houver saldo suficiente, nunca deixando o
@@ -147,4 +163,6 @@ class Cidade:
         print(f"Justica:     {self._nivel_justica}")
         print(f"Soldados:    {self._soldados}")
         print(f"Construcoes: {self._construcoes}")
+        print(f"Colheita:    {'ja feita neste ano' if self._colheita_feita else 'pendente'}")
+        print(f"Impostos:    {'ja arrecadados neste ano' if self._impostos_arrecadados else 'pendentes'}")
         print("------------------------------------------")

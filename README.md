@@ -2,7 +2,7 @@
 
 Jogo de estratégia econômica medieval em Python, jogado pelo console. O jogador comanda uma cidade da Itália medieval, começando no ano de 1400 com o título de Cavaleiro.
 
-> Projeto em desenvolvimento (SPOTDES). Por enquanto existem o menu, a criação do jogador e da cidade, o mercado de grãos e terras, a agricultura com a população e o governo com os impostos e as construções com soldados e edifícios.
+> Projeto em desenvolvimento (SPOTDES). Por enquanto existem o menu, a criação do jogador e da cidade, o mercado de grãos e terras, a agricultura com a população e o governo com os impostos e as construções com soldados e edifícios, e a partida com rodadas, vários jogadores e vitória.
 
 ## Como executar
 
@@ -49,6 +49,16 @@ A cidade começa com **0 soldados** e **0 construções**. No menu **Construçõ
 
 Soldados e construções são recursos acumuláveis (voltam ao padrão `adicionar_*`/`remover_*`) e aparecem em "Ver status da cidade".
 
+## Rodadas, jogadores e vitória
+
+Uma partida tem de **1 a 4 jogadores** (cada um com a sua cidade). Cada jogador joga o seu turno e usa **Encerrar turno** (opção 7); quando o último encerra, o ano fecha e todos avançam um ano. Começa em 1400 e termina em 1410.
+
+- **Colher** e **Arrecadar impostos** valem **uma vez por ano** por cidade.
+- **Prestígio** = construções × 10 + soldados × 2 + servos + terras ÷ 100 (florins não contam). Uma cidade nova começa com 300.
+- **Títulos** (prestígio mínimo): Cavaleiro (início) · Barão 400 · Conde 550 · Marquês 700 · Duque 850 · Rei/Rainha 1000. A promoção é checada ao fechar o ano, no máximo **um título por ano**.
+- **Vitória**: quem virar Rei/Rainha primeiro, ou o melhor colocado ao fim de 1410 (título mais alto; empate, maior prestígio).
+- **Ver classificação** (opção 8) mostra o ranking a qualquer momento. "Sobre o jogo" passa a ser a opção 9.
+
 ## Etapas
 
 - **Etapa 1**: estrutura inicial, módulo `main` e classe `Menu`.
@@ -57,3 +67,4 @@ Soldados e construções são recursos acumuláveis (voltam ao padrão `adiciona
 - **Etapa 4**: agricultura e população. `Cidade` ganha servos; nova classe `Agricultura` (colheita e distribuição de alimentos) e novo menu "Agricultura".
 - **Etapa 5**: impostos e governo. `Cidade` ganha taxa de imposto e nível de justiça; nova classe `Governo` (arrecadação, validação de taxa e justiça) e novo menu "Governo".
 - **Etapa 6**: construções e soldados. `Cidade` ganha soldados e construções; nova classe `Construcoes` (recrutar soldados validando florins e servos, construir) e novo menu "Construções" (opção 6; "Sobre o jogo" passa a ser a 7).
+- **Etapa 7**: rodadas, múltiplos jogadores e vitória. Novas classes `Partida` (turnos, anos, fim de jogo, vencedor) e `Nobreza` (prestígio e promoção); `Jogador` troca `titulo` por `nivel_titulo`; `Cidade` ganha os indicadores de colheita e impostos do ano; novos menus "Encerrar turno" e "Ver classificação".
