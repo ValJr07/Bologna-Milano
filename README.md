@@ -2,7 +2,7 @@
 
 Jogo de estratégia econômica medieval em Python, jogado pelo console. O jogador comanda uma cidade da Itália medieval, começando no ano de 1400 com o título de Cavaleiro.
 
-> Projeto em desenvolvimento (SPOTDES). Por enquanto existem o menu, a criação do jogador e da cidade, o mercado de grãos e terras, a agricultura com a população e o governo com os impostos.
+> Projeto em desenvolvimento (SPOTDES). Por enquanto existem o menu, a criação do jogador e da cidade, o mercado de grãos e terras, a agricultura com a população e o governo com os impostos e as construções com soldados e edifícios.
 
 ## Como executar
 
@@ -40,6 +40,15 @@ A cidade começa com **imposto de 10%** e justiça **Moderada**. No menu **Gover
 
 Taxa e justiça são configurações da cidade (não recursos acumuláveis), então são apenas lidas e definidas, nunca somadas ou subtraídas.
 
+## Construções e soldados
+
+A cidade começa com **0 soldados** e **0 construções**. No menu **Construções**:
+
+- **Recrutar soldados**: cada soldado custa **5 florins + 1 servo**. Florins e servos são validados *antes* de alterar qualquer um; se faltar um dos dois, nada muda.
+- **Construir**: cada construção custa **20 florins**.
+
+Soldados e construções são recursos acumuláveis (voltam ao padrão `adicionar_*`/`remover_*`) e aparecem em "Ver status da cidade".
+
 ## Etapas
 
 - **Etapa 1**: estrutura inicial, módulo `main` e classe `Menu`.
@@ -47,3 +56,4 @@ Taxa e justiça são configurações da cidade (não recursos acumuláveis), ent
 - **Etapa 3**: economia. `Cidade` ganha florins, terras e grãos; nova classe `Mercado` (preços fixos) e novo menu "Mercado" com compra e venda de grãos e terras.
 - **Etapa 4**: agricultura e população. `Cidade` ganha servos; nova classe `Agricultura` (colheita e distribuição de alimentos) e novo menu "Agricultura".
 - **Etapa 5**: impostos e governo. `Cidade` ganha taxa de imposto e nível de justiça; nova classe `Governo` (arrecadação, validação de taxa e justiça) e novo menu "Governo".
+- **Etapa 6**: construções e soldados. `Cidade` ganha soldados e construções; nova classe `Construcoes` (recrutar soldados validando florins e servos, construir) e novo menu "Construções" (opção 6; "Sobre o jogo" passa a ser a 7).

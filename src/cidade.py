@@ -13,6 +13,8 @@ class Cidade:
         self._servos = 200
         self._taxa_imposto = 10
         self._nivel_justica = "Moderada"
+        self._soldados = 0
+        self._construcoes = 0
 
     @property
     def nome(self) -> str:
@@ -41,6 +43,14 @@ class Cidade:
     @property
     def servos(self) -> int:
         return self._servos
+
+    @property
+    def soldados(self) -> int:
+        return self._soldados
+
+    @property
+    def construcoes(self) -> int:
+        return self._construcoes
 
     # Taxa de imposto e nivel de justica sao configuracoes, nao recursos
     # acumulaveis: getter/setter simples (a validacao fica no Governo).
@@ -103,18 +113,38 @@ class Cidade:
         self._servos -= qtd
         return True
 
+    def adicionar_soldados(self, qtd: int) -> None:
+        self._soldados += qtd
+
+    def remover_soldados(self, qtd: int) -> bool:
+        if qtd > self._soldados:
+            return False
+        self._soldados -= qtd
+        return True
+
+    def adicionar_construcoes(self, qtd: int) -> None:
+        self._construcoes += qtd
+
+    def remover_construcoes(self, qtd: int) -> bool:
+        if qtd > self._construcoes:
+            return False
+        self._construcoes -= qtd
+        return True
+
     def exibir_status(self) -> None:
         print()
         print("------------------------------------------")
         print("STATUS DA CIDADE")
         print("------------------------------------------")
-        print(f"Cidade:     {self._nome}")
-        print(f"Governante: {self._dono.titulo} {self._dono.nome}")
-        print(f"Ano atual:  {self._ano_atual}")
-        print(f"Florins:    {self._florins}")
-        print(f"Terras:     {self._terras} hectares")
-        print(f"Graos:      {self._graos} unidades")
-        print(f"Servos:     {self._servos}")
-        print(f"Imposto:    {self._taxa_imposto}%")
-        print(f"Justica:    {self._nivel_justica}")
+        print(f"Cidade:      {self._nome}")
+        print(f"Governante:  {self._dono.titulo} {self._dono.nome}")
+        print(f"Ano atual:   {self._ano_atual}")
+        print(f"Florins:     {self._florins}")
+        print(f"Terras:      {self._terras} hectares")
+        print(f"Graos:       {self._graos} unidades")
+        print(f"Servos:      {self._servos}")
+        print(f"Imposto:     {self._taxa_imposto}%")
+        print(f"Justica:     {self._nivel_justica}")
+        print(f"Soldados:    {self._soldados}")
+        print(f"Construcoes: {self._construcoes}")
         print("------------------------------------------")

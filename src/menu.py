@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from agricultura import Agricultura
 from cidade import Cidade
+from construcoes import Construcoes
 from governo import Governo
 from jogador import Jogador
 from mercado import Mercado
@@ -16,6 +17,7 @@ class Menu:
         self._mercado = Mercado()
         self._agricultura = Agricultura()
         self._governo = Governo()
+        self._construcoes = Construcoes()
 
     def executar(self) -> None:
         while self._em_execucao:
@@ -34,7 +36,8 @@ class Menu:
         print("3 - Mercado")
         print("4 - Agricultura")
         print("5 - Governo")
-        print("6 - Sobre o jogo")
+        print("6 - Construcoes")
+        print("7 - Sobre o jogo")
         print("0 - Sair")
         print("Escolha uma opcao: ", end="", flush=True)
 
@@ -60,12 +63,14 @@ class Menu:
         elif opcao == 5:
             self._abrir_governo()
         elif opcao == 6:
+            self._abrir_construcoes()
+        elif opcao == 7:
             self._exibir_sobre()
         elif opcao == 0:
             print("\nAte logo!")
             self._em_execucao = False
         else:
-            print("\nOpcao invalida! Digite 1, 2, 3, 4, 5, 6 ou 0.")
+            print("\nOpcao invalida! Digite 1, 2, 3, 4, 5, 6, 7 ou 0.")
 
     def _iniciar_novo_jogo(self) -> None:
         if self._cidade is not None:
@@ -339,6 +344,68 @@ class Menu:
             print(f"\nNivel de justica definido: {nivel}.")
         else:
             print("\nNivel de justica invalido.")
+
+    def _abrir_construcoes(self) -> None:
+        cidade = self._cidade
+        if cidade is None:
+            print("\nNenhum jogo iniciado. Escolha 'Novo jogo' primeiro.")
+            return
+
+        na_construcoes = True
+        while na_construcoes and self._em_execucao:
+            self._exibir_opcoes_construcoes(cidade)
+            opcao = self._ler_opcao()
+            if opcao == 1:
+                self._recrutar_soldados(cidade)
+            elif opcao == 2:
+                self._construir(cidade)
+            elif opcao == 0:
+                na_construcoes = False
+            else:
+                print("\nOpcao invalida! Digite 1, 2 ou 0.")
+
+    def _exibir_opcoes_construcoes(self, cidade: Cidade) -> None:
+        print()
+        print("------------------------------------------")
+        print("CONSTRUCOES")
+        print("------------------------------------------")
+        print(f"Custo do soldado:    {self._construcoes.preco_soldado} florins + 1 servo")
+        print(f"Custo da construcao: {self._construcoes.preco_construcao} florins")
+        print(f"Seus florins:        {cidade.florins}")
+        print(f"Seus servos:         {cidade.servos}")
+        print(f"Seus soldados:       {cidade.soldados}")
+        print(f"Suas construcoes:    {cidade.construcoes}")
+        print("------------------------------------------")
+        print("1 - Recrutar soldados")
+        print("2 - Construir")
+        print("0 - Voltar")
+        print("Escolha uma opcao: ", end="", flush=True)
+
+    def _recrutar_soldados(self, cidade: Cidade) -> None:
+        quantidade = self._ler_quantidade()
+        if quantidade is None:
+            return
+        if quantidade <= 0:
+            print("\nQuantidade invalida.")
+        elif self._construcoes.recrutar_soldados(cidade, quantidade):
+            custo = quantidade * self._construcoes.preco_soldado
+            print(f"\nRecrutamento realizado: {quantidade} soldados por "
+                  f"{custo} florins e {quantidade} servos.")
+        else:
+            print("\nFlorins ou servos insuficientes.")
+
+    def _construir(self, cidade: Cidade) -> None:
+        quantidade = self._ler_quantidade()
+        if quantidade is None:
+            return
+        if quantidade <= 0:
+            print("\nQuantidade invalida.")
+        elif self._construcoes.construir(cidade, quantidade):
+            custo = quantidade * self._construcoes.preco_construcao
+            print(f"\nConstrucao realizada: {quantidade} construcoes "
+                  f"por {custo} florins.")
+        else:
+            print("\nFlorins insuficientes.")
 
     def _exibir_sobre(self) -> None:
         print()
