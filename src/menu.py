@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from agricultura import Agricultura
 from cidade import Cidade
 from jogador import Jogador
 from mercado import Mercado
@@ -12,6 +13,7 @@ class Menu:
         self._jogador: Jogador | None = None
         self._cidade: Cidade | None = None
         self._mercado = Mercado()
+        self._agricultura = Agricultura()
 
     def executar(self) -> None:
         while self._em_execucao:
@@ -28,7 +30,8 @@ class Menu:
         print("1 - Novo jogo")
         print("2 - Ver status da cidade")
         print("3 - Mercado")
-        print("4 - Sobre o jogo")
+        print("4 - Agricultura")
+        print("5 - Sobre o jogo")
         print("0 - Sair")
         print("Escolha uma opcao: ", end="", flush=True)
 
@@ -50,12 +53,14 @@ class Menu:
         elif opcao == 3:
             self._abrir_mercado()
         elif opcao == 4:
+            self._abrir_agricultura()
+        elif opcao == 5:
             self._exibir_sobre()
         elif opcao == 0:
             print("\nAte logo!")
             self._em_execucao = False
         else:
-            print("\nOpcao invalida! Digite 1, 2, 3, 4 ou 0.")
+            print("\nOpcao invalida! Digite 1, 2, 3, 4, 5 ou 0.")
 
     def _iniciar_novo_jogo(self) -> None:
         if self._cidade is not None:
@@ -124,7 +129,10 @@ class Menu:
         print("Escolha uma opcao: ", end="", flush=True)
 
     def _ler_quantidade(self) -> int | None:
-        print("Quantidade: ", end="", flush=True)
+        return self._ler_inteiro("Quantidade: ")
+
+    def _ler_inteiro(self, pergunta: str) -> int | None:
+        print(pergunta, end="", flush=True)
         try:
             linha = input().strip()
         except EOFError:
@@ -182,6 +190,78 @@ class Menu:
             print(f"\nVenda realizada: {quantidade} hectares por {receita} florins.")
         else:
             print("\nTerras insuficientes.")
+
+    def _abrir_agricultura(self) -> None:
+        cidade = self._cidade
+        if cidade is None:
+            print("\nNenhum jogo iniciado. Escolha 'Novo jogo' primeiro.")
+            return
+
+        na_agricultura = True
+        while na_agricultura and self._em_execucao:
+            self._exibir_opcoes_agricultura(cidade)
+            opcao = self._ler_opcao()
+            if opcao == 1:
+                self._colher(cidade)
+            elif opcao == 2:
+                self._distribuir_alimentos(cidade)
+            elif opcao == 0:
+                na_agricultura = False
+            else:
+                print("\nOpcao invalida! Digite 1, 2 ou 0.")
+
+    def _exibir_opcoes_agricultura(self, cidade: Cidade) -> None:
+        print()
+        print("------------------------------------------")
+        print("AGRICULTURA")
+        print("------------------------------------------")
+        print(f"Suas terras:    {cidade.terras} hectares")
+        print(f"Seus servos:    {cidade.servos}")
+        print(f"Seus graos:     {cidade.graos}")
+        print("------------------------------------------")
+        print("1 - Colher (processar safra)")
+        print("2 - Distribuir alimentos")
+        print("0 - Voltar")
+        print("Escolha uma opcao: ", end="", flush=True)
+
+    def _colher(self, cidade: Cidade) -> None:
+        graos_antes = cidade.graos
+        hectares = self._agricultura.processar_colheita(cidade)
+        print()
+        if hectares == 0:
+            print("Nenhum hectare foi cultivado. "
+                  "E preciso ter terras, servos e graos para a semente.")
+            return
+        variacao = cidade.graos - graos_antes
+        print("Colheita realizada!")
+        print(f"Hectares cultivados: {hectares}")
+        print(f"Graos: {graos_antes} -> {cidade.graos} ({variacao:+d})")
+
+    def _distribuir_alimentos(self, cidade: Cidade) -> None:
+        minimo = self._agricultura.percentual_minimo
+        maximo = self._agricultura.percentual_maximo
+        percentual = self._ler_inteiro(
+            f"Percentual de graos a distribuir ({minimo} a {maximo}): ")
+        if percentual is None:
+            return
+
+        graos_antes = cidade.graos
+        servos_antes = cidade.servos
+        if not self._agricultura.distribuir_alimentos(cidade, percentual):
+            print(f"\nPercentual invalido. Digite um valor de {minimo} a {maximo}.")
+            return
+
+        distribuido = graos_antes - cidade.graos
+        print()
+        print(f"Foram distribuidos {distribuido} graos a populacao.")
+        if cidade.servos > servos_antes:
+            print(f"Comida de sobra: a populacao cresceu de "
+                  f"{servos_antes} para {cidade.servos} servos.")
+        elif cidade.servos < servos_antes:
+            print(f"Faltou comida: a populacao caiu de "
+                  f"{servos_antes} para {cidade.servos} servos.")
+        else:
+            print(f"A populacao se manteve em {cidade.servos} servos.")
 
     def _exibir_sobre(self) -> None:
         print()

@@ -10,6 +10,7 @@ class Cidade:
         self._florins = 1000
         self._terras = 10000
         self._graos = 500
+        self._servos = 200
 
     @property
     def nome(self) -> str:
@@ -34,6 +35,10 @@ class Cidade:
     @property
     def graos(self) -> int:
         return self._graos
+
+    @property
+    def servos(self) -> int:
+        return self._servos
 
     # Sera chamado apenas a partir da Etapa 7.
     def avancar_ano(self) -> None:
@@ -69,6 +74,15 @@ class Cidade:
         self._graos -= qtd
         return True
 
+    def adicionar_servos(self, qtd: int) -> None:
+        self._servos += qtd
+
+    def remover_servos(self, qtd: int) -> bool:
+        if qtd > self._servos:
+            return False
+        self._servos -= qtd
+        return True
+
     def exibir_status(self) -> None:
         print()
         print("------------------------------------------")
@@ -80,4 +94,5 @@ class Cidade:
         print(f"Florins:    {self._florins}")
         print(f"Terras:     {self._terras} hectares")
         print(f"Graos:      {self._graos} unidades")
+        print(f"Servos:     {self._servos}")
         print("------------------------------------------")

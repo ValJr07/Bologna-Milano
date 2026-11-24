@@ -1,0 +1,124 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam shadowing false
+skinparam class {
+  BackgroundColor White
+  BorderColor #1f2a5c
+  HeaderBackgroundColor #1f2a5c
+  FontColor #1f2a5c
+}
+skinparam ArrowColor #0b5c80
+skinparam NoteBackgroundColor #fdf3e1
+skinparam NoteBorderColor #fdf3e1
+
+title Etapa 4 - Diagrama de classes
+
+class Main <<módulo>> {
+  + main(): None
+}
+
+class Menu {
+  - _em_execucao: bool
+  - _jogador: Jogador | None
+  - _cidade: Cidade | None
+  - _mercado: Mercado
+  - _agricultura: Agricultura
+  --
+  + executar(): None
+  - _exibir_opcoes(): None
+  - _ler_opcao(): int
+  - _processar_opcao(opcao: int): None
+  - _iniciar_novo_jogo(): None
+  - _exibir_status(): None
+  - _abrir_mercado(): None
+  - _exibir_opcoes_mercado(cidade: Cidade): None
+  - _ler_quantidade(): int | None
+  - _comprar_graos(cidade: Cidade): None
+  - _vender_graos(cidade: Cidade): None
+  - _comprar_terras(cidade: Cidade): None
+  - _vender_terras(cidade: Cidade): None
+  - _abrir_agricultura(): None
+  - _exibir_opcoes_agricultura(cidade: Cidade): None
+  - _colher(cidade: Cidade): None
+  - _distribuir_alimentos(cidade: Cidade): None
+  - _ler_inteiro(pergunta: str): int | None
+  - _exibir_sobre(): None
+  - _ler_texto(pergunta: str): str | None
+}
+
+class Jogador {
+  - _nome: str
+  - _titulo: str
+  --
+  + Jogador(nome: str)
+  + nome: str «somente leitura»
+  + titulo: str «somente leitura»
+}
+
+class Cidade {
+  - _nome: str
+  - _dono: Jogador
+  - _ano_atual: int
+  - _florins: int
+  - _terras: int
+  - _graos: int
+  - _servos: int
+  --
+  + Cidade(nome: str, dono: Jogador)
+  + nome, dono, ano_atual: «somente leitura»
+  + florins, terras, graos, servos: int «somente leitura»
+  + avancar_ano(): None
+  + adicionar_florins(qtd: int): None
+  + remover_florins(qtd: int): bool
+  + adicionar_terras(qtd: int): None
+  + remover_terras(qtd: int): bool
+  + adicionar_graos(qtd: int): None
+  + remover_graos(qtd: int): bool
+  + adicionar_servos(qtd: int): None
+  + remover_servos(qtd: int): bool
+  + exibir_status(): None
+}
+
+class Mercado {
+  - _PRECO_GRAO: int
+  - _PRECO_TERRA: int
+  --
+  + preco_grao: int «somente leitura»
+  + preco_terra: int «somente leitura»
+  + comprar_graos(cidade: Cidade, quantidade: int): bool
+  + vender_graos(cidade: Cidade, quantidade: int): bool
+  + comprar_terras(cidade: Cidade, quantidade: int): bool
+  + vender_terras(cidade: Cidade, quantidade: int): bool
+}
+
+class Agricultura {
+  - _HECTARES_POR_SERVO: int
+  - _HECTARES_POR_SEMENTE: int
+  - _RENDIMENTO_POR_HECTARE: int
+  - _SERVOS_POR_GRAO: int
+  - _CRESCIMENTO_PERCENTUAL: int
+  - _PERCENTUAL_MINIMO: int
+  - _PERCENTUAL_MAXIMO: int
+  --
+  + percentual_minimo: int «somente leitura»
+  + percentual_maximo: int «somente leitura»
+  + processar_colheita(cidade: Cidade): int
+  + distribuir_alimentos(cidade: Cidade, percentual: int): bool
+}
+
+Main ..> Menu : cria e usa
+Menu --> "0..1" Jogador : jogador
+Menu --> "0..1" Cidade : cidade
+Menu --> "1" Mercado : mercado
+Menu --> "1" Agricultura : agricultura
+Cidade --> "1" Jogador : dono
+Mercado ..> Cidade : usa
+Agricultura ..> Cidade : usa
+
+note bottom of Agricultura
+  Mercado e Agricultura: dependência, não associação.
+  Só recebem a Cidade como parâmetro,
+  sem guardar referência.
+end note
+@enduml
